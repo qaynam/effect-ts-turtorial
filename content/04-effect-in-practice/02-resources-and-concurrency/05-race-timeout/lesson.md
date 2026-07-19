@@ -16,7 +16,7 @@ expectedOutput: |
 
 ## race: 速い方が勝つ
 
-`Effect.race` は 2 つの Effect を並行に走らせ、**先に成功した方**の結果を返します。右のコードにある 2 つのミラーサーバーを競争させましょう。
+`Effect.race` は 2 つの Effect を並行に走らせ、**先に成功した方**の結果を返します。エディタのコードにある 2 つのミラーサーバーを競争させましょう。
 
 ```ts
 +++  const winner = yield* Effect.race(mirror1, mirror2)

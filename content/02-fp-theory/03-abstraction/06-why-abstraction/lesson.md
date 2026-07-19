@@ -16,7 +16,7 @@ expectedOutput: |
 | `Either<E, A>` | 失敗の理由付き | 同じ発想で作れる | 同じ発想で作れる |
 | `Promise<A>` | あとで届く | `p.then(f)` | `p.then(f)` |
 
-どの行も「文脈付きの値」であり、中身を変換する `map` と、箱を返す関数をつなぐ `flatMap` を持ちます。Promise だけは変則的で、`then` が 1 つで両方を兼ねています(渡した関数が Promise を返すと自動で平らにする)。右のコードで、Array と Option と Promise の 3 つを実際に並べて動かしてみましょう。Promise の行がまだ TODO なので、`then` の連鎖を足してください。
+どの行も「文脈付きの値」であり、中身を変換する `map` と、箱を返す関数をつなぐ `flatMap` を持ちます。Promise だけは変則的で、`then` が 1 つで両方を兼ねています(渡した関数が Promise を返すと自動で平らにする)。エディタのコードで、Array と Option と Promise の 3 つを実際に並べて動かしてみましょう。Promise の行がまだ TODO なので、`then` の連鎖を足してください。
 
 ```ts
 +++Promise.resolve(10)

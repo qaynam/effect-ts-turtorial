@@ -31,7 +31,7 @@ expectedOutput: |
 
 ## 検証する
 
-`Schema.decodeUnknownSync(User)` は「unknown を受け取り、検証して `User` 型を返す(ダメなら throw する)」関数を作ります。右のコードの正しい JSON で試しましょう。
+`Schema.decodeUnknownSync(User)` は「unknown を受け取り、検証して `User` 型を返す(ダメなら throw する)」関数を作ります。エディタのコードの正しい JSON で試しましょう。
 
 ```ts
 +++const user = Schema.decodeUnknownSync(User)(goodData)

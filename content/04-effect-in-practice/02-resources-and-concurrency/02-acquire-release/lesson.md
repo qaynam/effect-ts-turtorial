@@ -21,7 +21,7 @@ Effect.acquireRelease(取得のEffect, (リソース) => 解放のEffect)
 
 ## リソースを定義する
 
-右のコードの DB 接続を `acquireRelease` で包みましょう。
+エディタのコードの DB 接続を `acquireRelease` で包みましょう。
 
 ```ts
 +++const connection = Effect.acquireRelease(

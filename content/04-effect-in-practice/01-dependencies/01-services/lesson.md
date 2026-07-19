@@ -14,7 +14,7 @@ expectedOutput: |
 
 ## サービスを宣言する
 
-サービスは `Context.Tag` を継承したクラスで宣言します。右のコードにすでに書いてあります。
+サービスは `Context.Tag` を継承したクラスで宣言します。エディタのコードにすでに書いてあります。
 
 ```ts
 class Random extends Context.Tag("Random")<

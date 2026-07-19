@@ -24,7 +24,7 @@ withSalesTax(100) // 110
 
 ## 課題: 設定済みの挨拶関数を作る
 
-右の `greet` は、挨拶の言葉と名前を 1 つずつ受け取るカリー化済みの関数です。仮実装になっている `sayHello` と `sayGoodMorning` を、`greet` の部分適用で作り直しましょう。
+エディタの `greet` は、挨拶の言葉と名前を 1 つずつ受け取るカリー化済みの関数です。仮実装になっている `sayHello` と `sayGoodMorning` を、`greet` の部分適用で作り直しましょう。
 
 まず `sayHello` です。`greet` に `"Hello"` だけを渡します。
 

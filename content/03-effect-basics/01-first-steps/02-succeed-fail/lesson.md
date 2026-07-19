@@ -11,7 +11,7 @@ expectedOutput: |
 
 前のレッスンで眺めた `Effect.succeed` / `Effect.fail` を、今度は自分の関数に使ってみましょう。題材は、素の TypeScript でよく見る `throw` する関数です。
 
-右の `divide` の型は `(a: number, b: number) => number`。シグネチャのどこにも「失敗するかもしれない」と書かれていません。呼ぶ側は、ドキュメントを読むか、実際に落ちて初めて失敗を知ることになります。Part 2 で `Either` を作ったときと同じ問題意識です。
+エディタの `divide` の型は `(a: number, b: number) => number`。シグネチャのどこにも「失敗するかもしれない」と書かれていません。呼ぶ側は、ドキュメントを読むか、実際に落ちて初めて失敗を知ることになります。Part 2 で `Either` を作ったときと同じ問題意識です。
 
 ## divide を書き換える
 

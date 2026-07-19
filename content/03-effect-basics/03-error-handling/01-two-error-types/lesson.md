@@ -19,7 +19,7 @@ expectedOutput: |
 
 ## Cause で見分ける
 
-`runSyncExit` が返す `Exit` の `Failure` 側には、失敗の原因を記録した `Cause` が入っています。2 種類のエラーは `cause._tag` で見分けられます。右のコードに観察コードを足しましょう。
+`runSyncExit` が返す `Exit` の `Failure` 側には、失敗の原因を記録した `Cause` が入っています。2 種類のエラーは `cause._tag` で見分けられます。エディタのコードに観察コードを足しましょう。
 
 ```ts
 +++const exit1 = Effect.runSyncExit(expected)

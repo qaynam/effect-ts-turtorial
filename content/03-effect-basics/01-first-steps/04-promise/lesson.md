@@ -15,7 +15,7 @@ expectedOutput: |
 
 ## promise: reject しない Promise を包む
 
-右のコードの `brewPromise`(100ms 後にコーヒーができる async 関数)を、`Effect.promise` で設計図にしましょう。実行には `runPromise` を使います。同期の `runSync` に対する非同期版で、結果を `Promise` として返します。
+エディタのコードの `brewPromise`(100ms 後にコーヒーができる async 関数)を、`Effect.promise` で設計図にしましょう。実行には `runPromise` を使います。同期の `runSync` に対する非同期版で、結果を `Promise` として返します。
 
 ```ts
 ~~~const brewPromise = async () => {

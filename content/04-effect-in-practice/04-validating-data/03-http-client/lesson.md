@@ -35,7 +35,7 @@ Effect.runPromise(
 
 ## まず動かす
 
-右のコードは [Open-Meteo](https://open-meteo.com/)(無料、API キー不要の天気 API)から東京の現在気温を取得します。まず Run して気温が表示されることを確認してください。
+エディタのコードは [Open-Meteo](https://open-meteo.com/)(無料、API キー不要の天気 API)から東京の現在気温を取得します。まず Run して気温が表示されることを確認してください。
 
 ただし今のコードには 1 か所ごまかしがあります。`response.json` の結果は `unknown` なので、`as` でキャストしています。前のレッスンで「信じます宣言」と呼んだやつです。
 

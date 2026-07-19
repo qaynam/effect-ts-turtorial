@@ -17,7 +17,7 @@ Effect の答えが `Scope`(スコープ)です。Scope は「後片付けの予
 
 ## finalizer を登録する
 
-右のコードは、ファイルを開いて処理をしますが、閉じ忘れています。開いた直後に finalizer を登録しましょう。
+エディタのコードは、ファイルを開いて処理をしますが、閉じ忘れています。開いた直後に finalizer を登録しましょう。
 
 ```ts
 const program = Effect.gen(function* () {

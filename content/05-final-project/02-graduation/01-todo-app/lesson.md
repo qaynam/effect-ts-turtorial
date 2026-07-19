@@ -18,7 +18,7 @@ docs:
 
 ## TODO の型とストアを決める
 
-右のコードにある `Todo` は、「ID、タイトル、完了済みか」を持つデータです。配列を直接 `push` するのではなく、`Ref<ReadonlyArray<Todo>>` に入れて更新します。
+エディタのコードにある `Todo` は、「ID、タイトル、完了済みか」を持つデータです。配列を直接 `push` するのではなく、`Ref<ReadonlyArray<Todo>>` に入れて更新します。
 
 ```ts
 interface Todo {

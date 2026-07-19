@@ -26,6 +26,7 @@ import {
   type RunStatus,
 } from "@/components/output/ConsolePanel"
 import { adjacentLessons, findLesson } from "@/content/loader"
+import { initBundler } from "@/sandbox/bundler"
 import { runUserCode, type RunHandle } from "@/sandbox/runner"
 import { clearDraft, loadDraft, saveDraft } from "@/stores/drafts"
 import { useProgress } from "@/stores/progress"
@@ -77,6 +78,10 @@ function LessonView({ lessonId }: { lessonId: string }) {
 
   useEffect(() => {
     setLastVisited(lesson.id)
+    // 初回 Run を待たせないよう、レッスンを開いた時点で wasm を温めておく
+    void initBundler().catch(() => {
+      /* 失敗しても Run 時に再試行される */
+    })
     return () => runHandleRef.current?.stop()
   }, [lesson.id, setLastVisited])
 

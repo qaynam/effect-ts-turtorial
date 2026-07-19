@@ -13,7 +13,7 @@ expectedOutput: |
 
 ## Layer.succeed
 
-もっとも単純な Layer は、できあがった実装をそのまま包む `Layer.succeed` です。右のコードの `provideService` を書き換えましょう。
+もっとも単純な Layer は、できあがった実装をそのまま包む `Layer.succeed` です。エディタのコードの `provideService` を書き換えましょう。
 
 ```ts
 +++const ConfigLive = Layer.succeed(Config, {

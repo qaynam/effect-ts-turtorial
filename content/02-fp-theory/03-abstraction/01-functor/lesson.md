@@ -23,7 +23,7 @@ map(some(10), double)  // Option<number> → Option<number>
 
 ## いちばん単純な箱に map を生やす
 
-右のコードに、値を 1 つ包むだけの型 `Box` を用意してあります。`mapBox` を実装してください。Some/None の分岐すらない、いちばん単純な `map` です。
+エディタのコードに、値を 1 つ包むだけの型 `Box` を用意してあります。`mapBox` を実装してください。Some/None の分岐すらない、いちばん単純な `map` です。
 
 ```ts
 const mapBox = <A, B>(box: Box<A>, f: (a: A) => B): Box<B> =>

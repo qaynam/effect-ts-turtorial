@@ -18,7 +18,7 @@ expectedOutput: |
 
 ## fork する
 
-右のコードの `download` は、完了まで 100 ミリ秒かかる処理です。これを fork してみましょう。
+エディタのコードの `download` は、完了まで 100 ミリ秒かかる処理です。これを fork してみましょう。
 
 ```ts
 const program = Effect.gen(function* () {

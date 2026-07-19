@@ -19,7 +19,7 @@ expectedOutput: |
 
 ## map で加工する
 
-右のコードには、失敗しうる 2 つの関数 `parseNumber` と `sqrt` があります。まず `parseNumber("21")` の結果を 2 倍にしてみましょう。
+エディタのコードには、失敗しうる 2 つの関数 `parseNumber` と `sqrt` があります。まず `parseNumber("21")` の結果を 2 倍にしてみましょう。
 
 ```ts
 +++const doubled = Effect.map(parseNumber("21"), (n) => n * 2)

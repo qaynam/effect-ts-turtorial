@@ -22,7 +22,7 @@ function doubleAll(numbers: number[]): number[] {
 
 ## 課題: myMap を完成させる
 
-「何をするか」を関数 `f` として受け取れば、骨組みは 1 つで済みます。右の `myMap` は骨組みだけできていて、まだ `f` を使っていません。各要素に `f` を適用した結果を `result` に入れるように直しましょう。
+「何をするか」を関数 `f` として受け取れば、骨組みは 1 つで済みます。エディタの `myMap` は骨組みだけできていて、まだ `f` を使っていません。各要素に `f` を適用した結果を `result` に入れるように直しましょう。
 
 ```ts
 function myMap(numbers: number[], f: (n: number) => number): number[] {

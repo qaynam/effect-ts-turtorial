@@ -7,7 +7,7 @@ expectedOutput: |
   None
 ---
 
-Functor の `map` には、できないことが 1 つあります。渡す関数が**箱を返す**場合です。右のコードで、`map` に `findEmail`(Option を返す関数)を渡しています。
+Functor の `map` には、できないことが 1 つあります。渡す関数が**箱を返す**場合です。エディタのコードで、`map` に `findEmail`(Option を返す関数)を渡しています。
 
 ```ts
 const nested = map(some("ichiro"), findEmail)

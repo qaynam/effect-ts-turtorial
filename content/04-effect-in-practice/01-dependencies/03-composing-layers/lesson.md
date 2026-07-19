@@ -13,11 +13,11 @@ expectedOutput: |
 
 Layer の本当のうれしさは、**差し替え**にあります。データベースに繋ぐ処理をテストしたいとき、本物の DB を立てる代わりに、決まった値を返すスタブ(偽物の実装)を Layer ごと付け替えればいい。プログラム本体には一切手を入れません。
 
-右のコードには 2 つのサービス(`Database` と `Logger`)と、その本番実装があります。`program` は両方を要求するので、型は `Effect<void, never, Database | Logger>` です。`R` には要求したサービスが `|` で積み上がっていきます。
+エディタのコードには 2 つのサービス(`Database` と `Logger`)と、その本番実装があります。`program` は両方を要求するので、型は `Effect<void, never, Database | Logger>` です。`R` には要求したサービスが `|` で積み上がっていきます。
 
 ## Layer をまとめる
 
-サービスが 2 つあるなら Layer も 2 つ必要です。右のコードでは `Effect.provide` を 2 回並べていますが、`Layer.merge` で先に 1 つの Layer にまとめる方が見通しがよくなります。書き換えましょう。
+サービスが 2 つあるなら Layer も 2 つ必要です。エディタのコードでは `Effect.provide` を 2 回並べていますが、`Layer.merge` で先に 1 つの Layer にまとめる方が見通しがよくなります。書き換えましょう。
 
 ```ts
 +++const MainLive = Layer.merge(DatabaseLive, LoggerLive)+++

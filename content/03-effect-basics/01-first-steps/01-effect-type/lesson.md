@@ -24,7 +24,7 @@ Effect<A, E, R>
 
 ## 型を観察する
 
-右のコードには 2 つの Effect があります。まず `program1` と `program2` に**マウスカーソルを乗せて**、型の表示を確かめてください。
+エディタのコードには 2 つの Effect があります。まず `program1` と `program2` に**マウスカーソルを乗せて**、型の表示を確かめてください。
 
 - `program1` は `Effect<number, never, never>`。「必ず `number` を返し、失敗せず、依存も不要」
 - `program2` は `Effect<never, Error, never>`。「成功することがなく、`Error` で失敗する」

@@ -19,7 +19,7 @@ addCurried(2)(3) // 5
 
 ## 課題: addCurried を完成させる
 
-右の `addCurried` は形だけできていて、中身が仮実装の `0` のままです。覚えている `a` と、あとから来る `b` を足すように直しましょう。
+エディタの `addCurried` は形だけできていて、中身が仮実装の `0` のままです。覚えている `a` と、あとから来る `b` を足すように直しましょう。
 
 ```ts
 const addCurried = (a: number) => (b: number): number => ~~~0~~~+++a + b+++

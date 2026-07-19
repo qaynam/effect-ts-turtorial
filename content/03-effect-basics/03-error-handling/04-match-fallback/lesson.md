@@ -16,7 +16,7 @@ expectedOutput: |
 
 ## match: 両側を一度に畳み込む
 
-右の `parseAge` を使って、入力を説明文に変える `describe` を完成させましょう。
+エディタの `parseAge` を使って、入力を説明文に変える `describe` を完成させましょう。
 
 ```ts
 const describe = (input: string) =>

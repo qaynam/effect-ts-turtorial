@@ -21,7 +21,7 @@ expectedOutput: |
 
 ## 回数で繰り返す
 
-右のコードの `healthCheck` を 2 回繰り返してみましょう。
+エディタのコードの `healthCheck` を 2 回繰り返してみましょう。
 
 ```ts
 +++  const count = yield* Effect.repeat(healthCheck, Schedule.recurs(2))
