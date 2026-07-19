@@ -5,6 +5,7 @@ import {
   ChevronRight,
   Eye,
   Home,
+  Keyboard,
   Play,
   RotateCcw,
   Square,
@@ -29,6 +30,7 @@ import { adjacentLessons, findLesson } from "@/content/loader"
 import { initBundler } from "@/sandbox/bundler"
 import { runUserCode, type RunHandle } from "@/sandbox/runner"
 import { clearDraft, loadDraft, saveDraft } from "@/stores/drafts"
+import { useEditorSettings } from "@/stores/editor"
 import { useProgress } from "@/stores/progress"
 
 export function LessonPage() {
@@ -60,6 +62,7 @@ function LessonView({ lessonId }: { lessonId: string }) {
   const isMobile = useMediaQuery("(max-width: 799px)")
 
   const { markCompleted, setLastVisited } = useProgress()
+  const { vimMode, toggleVimMode } = useEditorSettings()
 
   const [code, setCode] = useState(() => loadDraft(lesson.id) ?? lesson.initialCode)
   const [entries, setEntries] = useState<ConsoleEntry[]>([])
@@ -205,6 +208,15 @@ function LessonView({ lessonId }: { lessonId: string }) {
       </span>
       <Button
         size="sm"
+        variant={vimMode ? "secondary" : "outline"}
+        aria-pressed={vimMode}
+        onClick={toggleVimMode}
+        data-testid="vim-mode-toggle"
+      >
+        <Keyboard /> Vim
+      </Button>
+      <Button
+        size="sm"
         variant={showingSolution ? "secondary" : "outline"}
         onClick={toggleSolution}
         data-testid="solve-button"
@@ -225,8 +237,8 @@ function LessonView({ lessonId }: { lessonId: string }) {
   const editorPane = (
     <div className="flex h-full min-h-0 flex-col">
       {editorToolbar}
-      <div className="min-h-0 flex-1">
-        <CodeEditor value={code} onChange={handleChange} onRun={handleRun} />
+      <div className="min-h-0 flex-1 overflow-hidden">
+        <CodeEditor value={code} onChange={handleChange} onRun={handleRun} vimMode={vimMode} />
       </div>
     </div>
   )
