@@ -1,0 +1,19 @@
+{
+  "parts": [
+    {
+      "slug": "part-1-fp-basics",
+      "title": "Part 1: FPの基礎",
+      "lessons": ["01-welcome", "10-pipe-flow"]
+    },
+    {
+      "slug": "part-3-effect-intro",
+      "title": "Part 3: Effect入門",
+      "lessons": ["01-effect-type", "02-succeed-fail", "08-effect-gen"]
+    },
+    {
+      "slug": "part-4-effect-practice",
+      "title": "Part 4: Effect実践",
+      "lessons": ["14-http-client"]
+    }
+  ]
+}
