@@ -166,7 +166,44 @@
   }
   .prose-tutorial > div:has(pre),
   .prose-tutorial pre {
-    @apply my-4;
+    @apply my-3;
+  }
+  .prose-tutorial .code-block-frame > pre,
+  .prose-tutorial .shiki-block pre {
+    @apply m-0;
+  }
+
+  .lesson-scrollbar {
+    scrollbar-color: color-mix(in oklab, var(--muted-foreground) 30%, transparent)
+      transparent;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+  }
+
+  .lesson-scrollbar::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  .lesson-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .lesson-scrollbar::-webkit-scrollbar-thumb {
+    background-color: color-mix(
+      in oklab,
+      var(--muted-foreground) 28%,
+      transparent
+    );
+    border: 3px solid var(--background);
+    border-radius: 999px;
+  }
+
+  .lesson-scrollbar:hover::-webkit-scrollbar-thumb {
+    background-color: color-mix(
+      in oklab,
+      var(--muted-foreground) 42%,
+      transparent
+    );
   }
 }
 
@@ -182,16 +219,63 @@
   background-color: var(--shiki-dark-bg);
 }
 
-/* レッスン内コードの差分ハイライト(+++追加+++ / ~~~削除~~~) */
-.shiki-block .diff-add {
-  @apply rounded-sm bg-emerald-500/15 outline outline-1 outline-emerald-500/30;
+/* レッスン内コードの差分表示(+++追加+++ / ~~~削除~~~) */
+.shiki-block-diff .shiki {
+  @apply py-1;
 }
-.dark .shiki-block .diff-add {
-  @apply bg-emerald-400/20 outline-emerald-400/40;
+.shiki-block-diff code {
+  @apply block;
 }
-.shiki-block .diff-remove {
-  @apply rounded-sm bg-red-500/15 line-through outline outline-1 outline-red-500/30;
+.shiki-block-diff .diff-line {
+  @apply grid min-w-max grid-cols-[2.25rem_minmax(0,1fr)];
 }
-.dark .shiki-block .diff-remove {
-  @apply bg-red-400/20 outline-red-400/40;
+.shiki-block-diff .diff-gutter {
+  @apply select-none border-r px-2 py-0.5 text-center text-muted-foreground;
+}
+.shiki-block-diff .diff-code {
+  @apply px-3 py-0.5 pr-12;
+}
+.shiki-block-diff .diff-line-add {
+  background-color: color-mix(in oklab, #1a7f37 10%, var(--background));
+}
+.shiki-block-diff .diff-line-add .diff-gutter {
+  border-color: color-mix(in oklab, #1a7f37 20%, var(--border));
+  background-color: color-mix(in oklab, #1a7f37 14%, var(--background));
+  color: color-mix(in oklab, #1a7f37 82%, var(--foreground));
+}
+.shiki-block-diff .diff-line-remove {
+  background-color: color-mix(in oklab, #cf222e 9%, var(--background));
+}
+.shiki-block-diff .diff-line-remove .diff-gutter {
+  border-color: color-mix(in oklab, #cf222e 20%, var(--border));
+  background-color: color-mix(in oklab, #cf222e 13%, var(--background));
+  color: color-mix(in oklab, #cf222e 82%, var(--foreground));
+}
+.dark .shiki-block-diff .diff-line-add {
+  background-color: color-mix(in oklab, #3fb950 18%, var(--background));
+}
+.dark .shiki-block-diff .diff-line-add .diff-gutter {
+  border-color: color-mix(in oklab, #3fb950 28%, var(--border));
+  background-color: color-mix(in oklab, #3fb950 23%, var(--background));
+  color: color-mix(in oklab, #3fb950 78%, var(--foreground));
+}
+.dark .shiki-block-diff .diff-line-remove {
+  background-color: color-mix(in oklab, #ff7b72 17%, var(--background));
+}
+.dark .shiki-block-diff .diff-line-remove .diff-gutter {
+  border-color: color-mix(in oklab, #ff7b72 28%, var(--border));
+  background-color: color-mix(in oklab, #ff7b72 22%, var(--background));
+  color: color-mix(in oklab, #ff7b72 76%, var(--foreground));
+}
+.shiki-block-diff .diff-line span {
+  background-color: transparent;
+}
+.dark .shiki-block-diff .diff-line span {
+  background-color: transparent;
+}
+.shiki-block-diff.shiki-wrap .diff-line {
+  @apply min-w-0;
+}
+.shiki-block-diff.shiki-wrap .diff-code {
+  @apply whitespace-pre-wrap break-words;
 }

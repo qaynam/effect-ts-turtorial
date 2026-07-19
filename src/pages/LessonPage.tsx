@@ -250,7 +250,7 @@ function LessonView({ lessonId }: { lessonId: string }) {
   )
 
   const lessonTextPane = (
-    <div className="h-full overflow-y-auto">
+    <div className="lesson-scrollbar h-full overflow-y-auto">
       <LessonText lesson={lesson} next={next} />
     </div>
   )
@@ -307,11 +307,11 @@ function LessonView({ lessonId }: { lessonId: string }) {
         />
       ) : (
         <ResizablePanelGroup orientation="horizontal" className="min-h-0 flex-1">
-          <ResizablePanel defaultSize="45" minSize="25">
+          <ResizablePanel defaultSize="30" minSize="25" maxSize="50">
             {lessonTextPane}
           </ResizablePanel>
           <ResizableHandle withHandle />
-          <ResizablePanel defaultSize="55" minSize="30">
+          <ResizablePanel defaultSize="70" minSize="50">
             {editorWorkspace}
           </ResizablePanel>
         </ResizablePanelGroup>

@@ -1,52 +1,131 @@
 import { useEffect, useState } from "react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
-import { codeToHtml, type DecorationItem } from "shiki"
-import { ArrowRight, ExternalLink } from "lucide-react"
+import { codeToHtml } from "shiki"
+import { ArrowLeftRight, ArrowRight, ExternalLink, WrapText } from "lucide-react"
 import { Link } from "react-router"
+import { Button } from "@/components/ui/button"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import type { Lesson } from "@/content/types"
+import { cn } from "@/lib/utils"
 
-/**
- * コードブロック内の +++追加+++ / ~~~削除~~~ マーカーを取り除き、
- * 該当範囲を shiki の decoration(ハイライト)に変換する。
- * レッスンで「どこを書き換えるか」を視覚的に示すための記法。
- */
-function parseDiffMarkers(raw: string): { code: string; decorations: DecorationItem[] } {
-  const decorations: DecorationItem[] = []
+type DiffChunk = {
+  kind: "context" | "add" | "remove"
+  text: string
+}
+
+type DiffRow = {
+  kind: "context" | "add" | "remove"
+  code: string
+}
+
+function parseDiffChunks(raw: string): DiffChunk[] {
+  const chunks: DiffChunk[] = []
   const re = /(\+\+\+|~~~)([\s\S]*?)\1/g
-  let code = ""
   let last = 0
   let m: RegExpExecArray | null
   while ((m = re.exec(raw)) !== null) {
-    code += raw.slice(last, m.index)
-    const start = code.length
-    code += m[2]
-    if (m[2].length > 0) {
-      decorations.push({
-        start,
-        end: code.length,
-        properties: { class: m[1] === "+++" ? "diff-add" : "diff-remove" },
-      })
-    }
+    if (m.index > last) chunks.push({ kind: "context", text: raw.slice(last, m.index) })
+    chunks.push({ kind: m[1] === "+++" ? "add" : "remove", text: m[2] })
     last = m.index + m[0].length
   }
-  code += raw.slice(last)
-  return { code, decorations }
+  if (last < raw.length) chunks.push({ kind: "context", text: raw.slice(last) })
+  return chunks
+}
+
+function parseDiffRows(raw: string): { hasDiff: boolean; rows: DiffRow[] } {
+  const hasDiff = /(\+\+\+|~~~)/.test(raw)
+  if (!hasDiff) {
+    return {
+      hasDiff: false,
+      rows: raw.split("\n").map((code) => ({ kind: "context", code })),
+    }
+  }
+
+  const lines: DiffChunk[][] = [[]]
+  for (const chunk of parseDiffChunks(raw)) {
+    const parts = chunk.text.split("\n")
+    parts.forEach((part, index) => {
+      if (index > 0) lines.push([])
+      if (part.length > 0) lines[lines.length - 1].push({ ...chunk, text: part })
+    })
+  }
+
+  const rows = lines.flatMap((line): DiffRow[] => {
+    const hasAdd = line.some((chunk) => chunk.kind === "add")
+    const hasRemove = line.some((chunk) => chunk.kind === "remove")
+    const withoutAdd = line
+      .filter((chunk) => chunk.kind !== "add")
+      .map((chunk) => chunk.text)
+      .join("")
+    const withoutRemove = line
+      .filter((chunk) => chunk.kind !== "remove")
+      .map((chunk) => chunk.text)
+      .join("")
+
+    if (hasAdd && hasRemove) {
+      return [
+        { kind: "remove", code: withoutAdd },
+        { kind: "add", code: withoutRemove },
+      ]
+    }
+    if (hasAdd) return [{ kind: "add", code: withoutRemove }]
+    if (hasRemove) return [{ kind: "remove", code: withoutAdd }]
+    return [{ kind: "context", code: withoutRemove }]
+  })
+
+  return { hasDiff, rows }
+}
+
+function escapeAttribute(value: string): string {
+  return value.replace(/&/g, "&amp;").replace(/"/g, "&quot;")
+}
+
+function diffSymbol(kind: DiffRow["kind"]): string {
+  if (kind === "add") return "+"
+  if (kind === "remove") return "-"
+  return " "
+}
+
+function renderDiffHtml(html: string, rows: DiffRow[]): string {
+  const document = new DOMParser().parseFromString(html, "text/html")
+  const pre = document.querySelector("pre")
+  const lineElements = Array.from(document.querySelectorAll("span.line"))
+  const className = pre?.getAttribute("class") ?? "shiki"
+  const style = pre?.getAttribute("style") ?? null
+  const styleAttribute = style === null ? "" : ` style="${escapeAttribute(style)}"`
+  const body = rows
+    .map((row, index) => {
+      const code = lineElements[index]?.innerHTML || "&nbsp;"
+      return `<div class="diff-line diff-line-${row.kind}"><span class="diff-gutter" aria-hidden="true">${diffSymbol(
+        row.kind,
+      )}</span><span class="diff-code">${code}</span></div>`
+    })
+    .join("")
+
+  return `<pre class="${escapeAttribute(className)}"${styleAttribute}><code>${body}</code></pre>`
 }
 
 function ShikiBlock({ code: raw, lang }: { code: string; lang: string }) {
   const [html, setHtml] = useState<string | null>(null)
+  const [wrap, setWrap] = useState(false)
+  const { hasDiff, rows } = parseDiffRows(raw)
   useEffect(() => {
     let cancelled = false
-    const { code, decorations } = parseDiffMarkers(raw)
+    const parsed = parseDiffRows(raw)
+    const code = parsed.rows.map((row) => row.code).join("\n")
     codeToHtml(code, {
       lang,
       themes: { light: "github-light", dark: "github-dark" },
       defaultColor: false,
-      decorations,
     })
       .then((h) => {
-        if (!cancelled) setHtml(h)
+        if (!cancelled) setHtml(parsed.hasDiff ? renderDiffHtml(h, parsed.rows) : h)
       })
       .catch(() => {
         if (!cancelled) setHtml(null)
@@ -56,25 +135,73 @@ function ShikiBlock({ code: raw, lang }: { code: string; lang: string }) {
     }
   }, [raw, lang])
 
+  const toggleLabel = wrap ? "横スクロールで表示" : "折り返して表示"
+  const toolbar = (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            type="button"
+            variant="outline"
+            size="icon-xs"
+            aria-label={toggleLabel}
+            aria-pressed={wrap}
+            className="absolute right-2 top-2 z-10 border-border/70 bg-background/90 text-muted-foreground shadow-sm backdrop-blur hover:bg-background hover:text-foreground"
+            onClick={() => setWrap((current) => !current)}
+          >
+            {wrap ? <ArrowLeftRight /> : <WrapText />}
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>{toggleLabel}</TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  )
+
   if (html === null) {
     return (
-      <pre className="overflow-x-auto rounded-lg border bg-muted/40 p-4 text-[13px]">
-        <code>{parseDiffMarkers(raw).code}</code>
-      </pre>
+      <div className="code-block-frame group/code relative">
+        {toolbar}
+        <pre
+          className={cn(
+            "rounded-lg border bg-muted/40 px-4 py-2 pr-12 text-[13px] leading-[1.6]",
+            wrap
+              ? "overflow-x-hidden whitespace-pre-wrap break-words"
+              : "overflow-x-auto whitespace-pre",
+          )}
+        >
+          <code>
+            {hasDiff
+              ? rows.map((row) => `${diffSymbol(row.kind)} ${row.code}`).join("\n")
+              : raw}
+          </code>
+        </pre>
+      </div>
     )
   }
   return (
-    <div
-      className="shiki-block overflow-x-auto rounded-lg border text-[13px] [&_pre]:p-4"
-      // shiki が生成した信頼できる HTML のみを描画する
-      dangerouslySetInnerHTML={{ __html: html }}
-    />
+    <div className="code-block-frame group/code relative">
+      {toolbar}
+      <div
+        className={cn(
+          "shiki-block rounded-lg border text-[13px] leading-[1.6]",
+          hasDiff
+            ? "shiki-block-diff [&_pre]:p-0"
+            : "[&_pre]:py-2 [&_pre]:pl-4 [&_pre]:pr-12",
+          wrap && "shiki-wrap",
+          wrap
+            ? "overflow-x-hidden [&_pre]:whitespace-pre-wrap [&_pre]:break-words"
+            : "overflow-x-auto [&_pre]:whitespace-pre",
+        )}
+        // shiki が生成した信頼できる HTML のみを描画する
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
+    </div>
   )
 }
 
 export function LessonText({ lesson, next }: { lesson: Lesson; next?: Lesson }) {
   return (
-    <article className="prose-tutorial mx-auto max-w-2xl px-6 py-8">
+    <article className="prose-tutorial w-full max-w-none px-6 py-8 md:px-8 lg:px-10">
       <h1 className="mb-4 mt-2 text-2xl font-bold tracking-tight">{lesson.meta.title}</h1>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
