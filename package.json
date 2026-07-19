@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "pnpm gen && tsc -b && vite build",
+    "build": "pnpm gen && tsc -b && vite build && pnpm build:og && pnpm prerender",
     "gen": "tsx scripts/build-vendor.ts && tsx scripts/build-types.ts",
     "predev": "tsx scripts/ensure-generated.ts",
     "check-doc-links": "tsx scripts/check-doc-links.ts",
@@ -15,7 +15,10 @@
     "e2e": "playwright test",
     "deploy": "pnpm run build && wrangler deploy",
     "verify-lessons": "tsx scripts/verify-lessons.ts",
-    "typecheck-content": "tsc -p tsconfig.content.json"
+    "typecheck-content": "tsc -p tsconfig.content.json",
+    "build:og": "tsx scripts/build-og.ts",
+    "prerender": "tsx scripts/prerender.ts",
+    "predeploy": "tsx scripts/check-site-url.ts"
   },
   "dependencies": {
     "@effect/platform": "^0.97.0",
@@ -43,7 +46,9 @@
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.45.1",
+    "@fontsource/noto-sans-jp": "^5.2.9",
     "@playwright/test": "^1.61.1",
+    "@resvg/resvg-js": "^2.6.2",
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^24.13.2",
     "@types/react": "^19.2.17",
@@ -52,6 +57,7 @@
     "esbuild": "^0.28.1",
     "oxlint": "^1.71.0",
     "playwright": "^1.61.1",
+    "satori": "^0.28.0",
     "tailwindcss": "^4.3.3",
     "tsx": "^4.23.1",
     "typescript": "~6.0.2",

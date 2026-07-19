@@ -1,0 +1,12 @@
+# OG 画像はファイル名が固定(内容ハッシュを含まない)ため immutable にはしない。
+# レッスンのタイトルを直すと同じ URL で中身が変わるため、
+# 1 日キャッシュ + 再検証中は古いものを返す、が安全側。
+/og/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+# ファイル名にハッシュが入るビルド成果物は恒久キャッシュしてよい
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/vendor/*
+  Cache-Control: public, max-age=31536000, immutable
