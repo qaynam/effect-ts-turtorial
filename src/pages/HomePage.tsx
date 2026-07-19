@@ -8,13 +8,6 @@ import { allLessons, curriculum } from "@/content/loader"
 import { prefetchLessonAssets } from "@/lib/prefetch"
 import { useProgress } from "@/stores/progress"
 
-const GOALS = [
-  "純粋関数・副作用・参照透過性を、自分の言葉で説明できる",
-  "Option / Either / ADT を使って「失敗」や「値が無い」を型で表せる",
-  "Functor / Monad を暗記ではなく map・flatMap の延長として理解している",
-  "Effect の Layer・Schema・並行処理・リトライで小さなアプリを組み立てられる",
-]
-
 export function HomePage() {
   const { completed, lastVisited } = useProgress()
 
@@ -36,8 +29,9 @@ export function HomePage() {
         <ThemeToggle />
       </div>
       <p className="mt-4 leading-7 text-muted-foreground">
-        null チェックの漏れ、どこで throw されるか分からない関数、絡まった非同期処理。
-        こうした「予測できなさ」を型と値で扱えるようにするのが関数型プログラミング(FP)と{" "}
+        このチュートリアルは、TypeScript は書けるけれど FP や Effect は初めての人が、
+        素の TypeScript で純粋関数・参照透過性・Option / Either / ADT・map / flatMap の感覚を掴み、
+        その後に{" "}
         <a
           href="https://effect.website"
           target="_blank"
@@ -46,8 +40,9 @@ export function HomePage() {
         >
           Effect
         </a>{" "}
-        です。素の TypeScript で FP の考え方を身につけてから、Effect で実務の副作用処理まで進みます。
-        全 {allLessons.length} レッスン、すべてブラウザ上で書いて実行しながら進められます。
+        で副作用・失敗・依存関係・リトライ・並行処理を整理するところまで進みます。
+        公式ドキュメントの抽象度で止まった人でも、全 {allLessons.length} レッスンをブラウザ上で書いて実行しながら、
+        最後は API 呼び出しを含む小さな Weather App まで組み立てられます。
       </p>
 
       <div className="mt-8 rounded-lg border p-4">
@@ -66,29 +61,6 @@ export function HomePage() {
           </Button>
         </div>
       </div>
-
-      <section className="mt-12">
-        <h2 className="text-lg font-bold tracking-tight">完走するとできるようになること</h2>
-        <ul className="mt-3 space-y-2">
-          {GOALS.map((goal) => (
-            <li key={goal} className="flex gap-2.5 text-sm leading-6">
-              <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-emerald-500" />
-              <span>{goal}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="mt-10 rounded-lg border bg-muted/30 p-4 text-sm leading-6">
-        <p>
-          <span className="font-semibold">対象:</span>{" "}
-          TypeScript は書けるけれど FP や Effect は初めて、という人。
-          公式ドキュメントを読んだものの抽象度が高くて掴めなかった人にも向いています。
-        </p>
-        <p className="mt-2 text-muted-foreground">
-          JavaScript / TypeScript の文法そのものの入門書ではありません。
-        </p>
-      </section>
 
       <div className="mt-12 space-y-12">
         {curriculum.parts.map((part) => {
