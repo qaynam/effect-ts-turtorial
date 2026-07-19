@@ -25,7 +25,7 @@ export function HomePage() {
     <div className="mx-auto max-w-3xl px-6 py-12">
       <div className="flex items-start justify-between gap-4">
         <h1 className="text-3xl font-bold tracking-tight">
-          Effect で学ぶ関数型プログラミング
+          Effect-ts で学ぶ関数型プログラミング
         </h1>
         <ThemeToggle />
       </div>

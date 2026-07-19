@@ -263,7 +263,7 @@ function LessonView({ lessonId }: { lessonId: string }) {
             <Link to="/">
               <Home className="size-4" />
               <span className="hidden font-bold tracking-tight md:inline">
-                Effect<span className="font-normal text-muted-foreground">で学ぶFP</span>
+                Effect-ts<span className="font-normal text-muted-foreground">で学ぶFP</span>
               </span>
             </Link>
           </Button>

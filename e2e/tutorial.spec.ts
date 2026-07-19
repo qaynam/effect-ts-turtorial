@@ -5,7 +5,7 @@ const EFFECT_GEN = "/tutorial/03-effect-basics/02-building-programs/03-effect-ge
 
 test("レッスンを開いて Run すると出力が表示される", async ({ page }) => {
   await page.goto("/")
-  await expect(page.getByRole("heading", { name: /Effect で学ぶ/ })).toBeVisible()
+  await expect(page.getByRole("heading", { name: /Effect-ts で学ぶ/ })).toBeVisible()
 
   await page.getByTestId("resume-button").click()
   await expect(page).toHaveURL(new RegExp(WELCOME))

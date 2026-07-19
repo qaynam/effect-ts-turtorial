@@ -9,7 +9,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises"
 import path from "node:path"
 import { Resvg } from "@resvg/resvg-js"
 import satori from "satori"
-import { loadLessons, ogFileName, projectRoot, siteName, siteUrl } from "./lib/lessons"
+import { loadLessons, ogFileName, projectRoot, siteName } from "./lib/lessons"
 
 const OUT_DIR = path.join(projectRoot, "dist/og")
 const WIDTH = 1200
@@ -34,7 +34,10 @@ const FONT_FAMILY = "OGLatin, OGJa"
 type Node = { type: string; props: Record<string, unknown> }
 const el = (type: string, props: Record<string, unknown>, ...children: unknown[]): Node => ({
   type,
-  props: { ...props, children: children.length === 1 ? children[0] : children },
+  props:
+    children.length === 0
+      ? props
+      : { ...props, children: children.length === 1 ? children[0] : children },
 })
 
 interface CardInput {
@@ -47,25 +50,43 @@ interface CardInput {
   footnote: string
 }
 
+// TypeScript のブランド青 (#3178C6) を基調に、白へ抜ける寒色グラデーション
+const NAVY = "#0a1220"
+const TS_BLUE = "#3178c6"
+const SKY = "#38bdf8"
+
 function card({ eyebrow, title, summary, brand = siteName, footnote }: CardInput): Node {
   return el(
     "div",
     {
       style: {
+        position: "relative",
         width: "100%",
         height: "100%",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
         padding: "72px 80px",
-        backgroundColor: "#0b0b0f",
-        // Effect のブランドカラー(紫)に寄せたアクセント
+        backgroundColor: NAVY,
         backgroundImage:
-          "radial-gradient(circle at 88% 8%, rgba(139,92,246,0.30) 0%, rgba(11,11,15,0) 55%)",
+          `radial-gradient(circle at 96% 4%, rgba(56,189,248,0.30) 0%, rgba(10,18,32,0) 52%),` +
+          `radial-gradient(circle at 4% 100%, rgba(49,120,198,0.26) 0%, rgba(10,18,32,0) 48%)`,
         fontFamily: FONT_FAMILY,
-        color: "#fafafa",
+        color: "#f8fafc",
       },
     },
+    // 上端のアクセントバー(青 → 空色 → 白)
+    el("div", {
+      style: {
+        display: "flex",
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: 8,
+        backgroundImage: `linear-gradient(90deg, ${TS_BLUE} 0%, ${SKY} 55%, #e0f2fe 100%)`,
+      },
+    }),
     el(
       "div",
       { style: { display: "flex", flexDirection: "column" } },
@@ -76,7 +97,7 @@ function card({ eyebrow, title, summary, brand = siteName, footnote }: CardInput
             display: "flex",
             fontSize: 26,
             fontWeight: 700,
-            color: "#a78bfa",
+            color: "#7dd3fc",
             letterSpacing: "0.04em",
           },
         },
@@ -104,7 +125,7 @@ function card({ eyebrow, title, summary, brand = siteName, footnote }: CardInput
             marginTop: 28,
             fontSize: 30,
             lineHeight: 1.5,
-            color: "#a1a1aa",
+            color: "#94a3b8",
           },
         },
         summary,
@@ -117,13 +138,13 @@ function card({ eyebrow, title, summary, brand = siteName, footnote }: CardInput
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          borderTop: "1px solid #27272a",
+          borderTop: "1px solid rgba(148,163,184,0.22)",
           paddingTop: 28,
           fontSize: 26,
         },
       },
       el("div", { style: { display: "flex", fontWeight: 700 } }, brand),
-      el("div", { style: { display: "flex", color: "#71717a" } }, footnote),
+      el("div", { style: { display: "flex", color: "#64748b" } }, footnote),
     ),
   )
 }
@@ -151,8 +172,9 @@ total += await render(
   {
     eyebrow: "INTERACTIVE TUTORIAL",
     title: siteName,
-    summary: "ブラウザで書いて、動かして学ぶ関数型プログラミングと Effect",
-    brand: siteUrl.replace(/^https?:\/\//, ""),
+    summary: "ブラウザで書いて、動かして学ぶ関数型プログラミングと Effect-ts",
+    // ドメインは環境で変わる(本番 / トンネル)ため画像には焼き込まない
+    brand: "TypeScript + Effect-ts",
     footnote: `全 ${lessons.length} レッスン`,
   },
   "default.png",
