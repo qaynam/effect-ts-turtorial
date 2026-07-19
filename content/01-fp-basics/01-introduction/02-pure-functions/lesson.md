@@ -1,5 +1,6 @@
 ---
 title: "純粋関数"
+summary: "同じ入力に同じ出力を返す関数の強さ"
 expectedOutput: |
   Hello, World!
   Hello, World!

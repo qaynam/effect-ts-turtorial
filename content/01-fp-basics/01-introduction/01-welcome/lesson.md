@@ -1,5 +1,6 @@
 ---
 title: "ようこそ"
+summary: "チュートリアルの使い方に慣れる"
 expectedOutput: |
   Hello, FP!
 ---

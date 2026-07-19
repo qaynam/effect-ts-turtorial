@@ -8,6 +8,8 @@ export interface DocLink {
 /** lesson.md の frontmatter */
 export interface LessonMeta {
   title: string
+  /** 目次に表示する 1 行説明 */
+  summary: string
   /** 実行タイムアウト(ms)。既定 5000。Schedule 系レッスンで延長する */
   timeoutMs?: number
   /** 指定時、コンソール出力がこれと一致したら「クリア」判定 */

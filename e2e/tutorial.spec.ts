@@ -71,3 +71,25 @@ test("レッスンメニューから別のレッスンへ移動できる", async
   await page.getByRole("link", { name: /succeed と fail/ }).click()
   await expect(page).toHaveURL(/03-effect-basics\/01-first-steps\/02-succeed-fail/)
 })
+
+test.describe("モバイル表示", () => {
+  test.use({ viewport: { width: 390, height: 844 } })
+
+  test("解説とエディタをタブで切り替えて実行できる", async ({ page }) => {
+    await page.goto(WELCOME)
+
+    // 初期表示は解説ペイン。エディタはまだマウントされていない
+    await expect(page.getByRole("heading", { name: "ようこそ" })).toBeVisible()
+    await expect(page.locator(".monaco-editor")).toHaveCount(0)
+
+    await page.getByRole("button", { name: "エディタ", exact: true }).click()
+    await expect(page.locator(".monaco-editor").first()).toBeVisible({ timeout: 30_000 })
+
+    await page.getByTestId("solve-button").click()
+    await page.getByTestId("run-button").click()
+    await expect(page.getByText("クリア!")).toBeVisible({ timeout: 30_000 })
+
+    await page.getByRole("button", { name: "解説", exact: true }).click()
+    await expect(page.getByRole("heading", { name: "ようこそ" })).toBeVisible()
+  })
+})

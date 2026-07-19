@@ -16,6 +16,7 @@ content/<part>/<chapter>/<lesson>/
 ```yaml
 ---
 title: "純粋関数"              # 必須。本文に h1 は書かない(title から自動表示)
+summary: "同じ入力に同じ出力を返す関数の強さ"  # 必須。目次に出る 1 行説明(20 字前後)
 expectedOutput: |             # 任意。console 出力がこれと完全一致したらクリア判定
   7
   7

@@ -39,8 +39,8 @@ function parseLessonMarkdown(raw: string, id: string): { meta: LessonMeta; body:
     throw new Error(`${id}/lesson.md に frontmatter がありません`)
   }
   const meta = parseYaml(match[1]) as LessonMeta
-  if (!meta?.title) {
-    throw new Error(`${id}/lesson.md の frontmatter に title が必要です`)
+  if (!meta?.title || !meta?.summary) {
+    throw new Error(`${id}/lesson.md の frontmatter に title / summary が必要です`)
   }
   return { meta, body: raw.slice(match[0].length) }
 }

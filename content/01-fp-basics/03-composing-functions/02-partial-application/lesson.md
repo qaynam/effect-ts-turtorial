@@ -1,5 +1,6 @@
 ---
 title: "部分適用"
+summary: "引数を先に渡して設定済み関数を作る"
 expectedOutput: |
   Hello, Ichiro!
   Hello, Hanako!

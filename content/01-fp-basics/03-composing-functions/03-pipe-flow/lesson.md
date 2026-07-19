@@ -1,5 +1,6 @@
 ---
 title: "合成と pipe / flow"
+summary: "小さな関数をつないで処理を組み立てる"
 docs:
   - label: "Building Pipelines"
     url: "https://effect.website/docs/getting-started/building-pipelines/"

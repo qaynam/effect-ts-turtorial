@@ -1,5 +1,6 @@
 ---
 title: "クロージャ"
+summary: "関数が外側の変数を覚える仕組み"
 expectedOutput: |
   1
   2

@@ -1,5 +1,6 @@
 ---
 title: "カリー化"
+summary: "複数引数を1引数関数の連なりに変える"
 expectedOutput: |
   5
   5

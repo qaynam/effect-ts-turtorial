@@ -67,9 +67,14 @@ export function HomePage() {
                           ) : (
                             <Circle className="size-4 shrink-0 text-muted-foreground/40" />
                           )}
-                          <span className="truncate text-sm font-medium">
-                            {lesson.meta.title}
-                          </span>
+                          <div className="min-w-0">
+                            <p className="truncate text-sm font-medium">
+                              {lesson.meta.title}
+                            </p>
+                            <p className="truncate text-xs text-muted-foreground">
+                              {lesson.meta.summary}
+                            </p>
+                          </div>
                         </Link>
                       </li>
                     ))}

@@ -1,5 +1,6 @@
 ---
 title: "イミュータビリティ"
+summary: "変更せずに新しい値を作る"
 expectedOutput: |
   free
   pro

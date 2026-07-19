@@ -1,5 +1,6 @@
 ---
 title: "副作用"
+summary: "戻り値以外に起こることを見つける"
 expectedOutput: |
   100,90,70
   50

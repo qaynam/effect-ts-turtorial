@@ -1,5 +1,6 @@
 ---
 title: "高階関数"
+summary: "関数を値として渡し、map を自作する"
 expectedOutput: |
   2,4,6
   11,12,13
