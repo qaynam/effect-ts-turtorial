@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "pnpm gen && tsc -b && vite build && pnpm build:og && pnpm prerender",
+    "build": "pnpm gen && tsc -b && vite build",
     "gen": "tsx scripts/build-vendor.ts && tsx scripts/build-types.ts",
     "predev": "tsx scripts/ensure-generated.ts",
     "check-doc-links": "tsx scripts/check-doc-links.ts",
