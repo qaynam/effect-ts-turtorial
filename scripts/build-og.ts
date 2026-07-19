@@ -44,101 +44,102 @@ interface CardInput {
   footnote: string
 }
 
-// TypeScript のブランド青 (#3178C6) を基調に、白へ抜ける寒色グラデーション
-const NAVY = "#0a1220"
+const INK = "#0f172a"
+const MUTED = "#475569"
 const TS_BLUE = "#3178c6"
-const SKY = "#38bdf8"
 
 function card({ eyebrow, title, summary, brand = siteName, footnote }: CardInput): Node {
   return el(
     "div",
     {
       style: {
-        position: "relative",
         width: "100%",
         height: "100%",
         display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        padding: "72px 80px",
-        backgroundColor: NAVY,
-        backgroundImage:
-          `radial-gradient(circle at 96% 4%, rgba(56,189,248,0.30) 0%, rgba(10,18,32,0) 52%),` +
-          `radial-gradient(circle at 4% 100%, rgba(49,120,198,0.26) 0%, rgba(10,18,32,0) 48%)`,
+        padding: 36,
+        backgroundColor: "#eef2f8",
         fontFamily: FONT_FAMILY,
-        color: "#f8fafc",
       },
     },
-    // 上端のアクセントバー(青 → 空色 → 白)
-    el("div", {
-      style: {
-        display: "flex",
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: 8,
-        backgroundImage: `linear-gradient(90deg, ${TS_BLUE} 0%, ${SKY} 55%, #e0f2fe 100%)`,
-      },
-    }),
-    el(
-      "div",
-      { style: { display: "flex", flexDirection: "column" } },
-      el(
-        "div",
-        {
-          style: {
-            display: "flex",
-            fontSize: 26,
-            fontWeight: 700,
-            color: "#7dd3fc",
-            letterSpacing: "0.04em",
-          },
-        },
-        eyebrow,
-      ),
-      el(
-        "div",
-        {
-          style: {
-            display: "flex",
-            marginTop: 24,
-            fontSize: title.length > 24 ? 62 : 76,
-            fontWeight: 700,
-            lineHeight: 1.25,
-            letterSpacing: "-0.01em",
-          },
-        },
-        title,
-      ),
-      el(
-        "div",
-        {
-          style: {
-            display: "flex",
-            marginTop: 28,
-            fontSize: 30,
-            lineHeight: 1.5,
-            color: "#94a3b8",
-          },
-        },
-        summary,
-      ),
-    ),
     el(
       "div",
       {
         style: {
+          flex: 1,
           display: "flex",
-          alignItems: "center",
+          flexDirection: "column",
           justifyContent: "space-between",
-          borderTop: "1px solid rgba(148,163,184,0.22)",
-          paddingTop: 28,
-          fontSize: 26,
+          padding: "64px 72px",
+          border: `4px solid ${INK}`,
+          borderRadius: 40,
+          backgroundColor: "#ffffff",
+          backgroundImage:
+            `radial-gradient(circle at 2% 4%, rgba(56,189,248,0.62) 0%, rgba(255,255,255,0) 58%),` +
+            `radial-gradient(circle at 98% 0%, rgba(129,140,248,0.52) 0%, rgba(255,255,255,0) 55%),` +
+            `radial-gradient(circle at 100% 96%, rgba(45,212,191,0.46) 0%, rgba(255,255,255,0) 52%),` +
+            `radial-gradient(circle at 6% 100%, rgba(59,130,246,0.44) 0%, rgba(255,255,255,0) 55%)`,
+          color: INK,
         },
       },
-      el("div", { style: { display: "flex", fontWeight: 700 } }, brand),
-      el("div", { style: { display: "flex", color: "#64748b" } }, footnote),
+      el(
+        "div",
+        { style: { display: "flex", flexDirection: "column" } },
+        el(
+          "div",
+          {
+            style: {
+              display: "flex",
+              fontSize: 26,
+              fontWeight: 700,
+              color: TS_BLUE,
+              letterSpacing: "0.04em",
+            },
+          },
+          eyebrow,
+        ),
+        el(
+          "div",
+          {
+            style: {
+              display: "flex",
+              marginTop: 22,
+              fontSize: title.length > 24 ? 60 : 74,
+              fontWeight: 700,
+              lineHeight: 1.25,
+              letterSpacing: "-0.01em",
+            },
+          },
+          title,
+        ),
+        el(
+          "div",
+          {
+            style: {
+              display: "flex",
+              marginTop: 26,
+              fontSize: 29,
+              lineHeight: 1.5,
+              color: MUTED,
+            },
+          },
+          summary,
+        ),
+      ),
+      el(
+        "div",
+        {
+          style: {
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            borderTop: `2px solid rgba(15,23,42,0.12)`,
+            paddingTop: 26,
+            fontSize: 25,
+          },
+        },
+        el("div", { style: { display: "flex", fontWeight: 700 } }, brand),
+        el("div", { style: { display: "flex", color: MUTED } }, footnote),
+      ),
     ),
   )
 }
