@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { Link, Navigate, useParams } from "react-router"
-import { ChevronLeft, ChevronRight, Eye, Play, RotateCcw, Square, Undo2 } from "lucide-react"
+import { ChevronLeft, ChevronRight, Eye, Home, Play, RotateCcw, Square, Undo2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   ResizableHandle,
@@ -9,30 +9,30 @@ import {
 } from "@/components/ui/resizable"
 import { CodeEditor } from "@/components/editor/CodeEditor"
 import { LessonText } from "@/components/lesson/LessonText"
+import { LessonMenu } from "@/components/layout/LessonMenu"
+import { ThemeToggle } from "@/components/layout/ThemeToggle"
 import {
   ConsolePanel,
   type ConsoleEntry,
   type RunStatus,
 } from "@/components/output/ConsolePanel"
-import { adjacentLessons, findLesson, partOf } from "@/content/loader"
+import { adjacentLessons, findLesson } from "@/content/loader"
 import { runUserCode, type RunHandle } from "@/sandbox/runner"
 import { clearDraft, loadDraft, saveDraft } from "@/stores/drafts"
 import { useProgress } from "@/stores/progress"
 
 export function LessonPage() {
-  const { partSlug, lessonSlug } = useParams()
-  const lesson = findLesson(partSlug ?? "", lessonSlug ?? "")
+  const { partSlug, chapterSlug, lessonSlug } = useParams()
+  const lesson = findLesson(`${partSlug}/${chapterSlug}/${lessonSlug}`)
   if (!lesson) return <Navigate to="/" replace />
   return <LessonView key={lesson.id} lessonId={lesson.id} />
 }
 
 function LessonView({ lessonId }: { lessonId: string }) {
-  const [partSlug, lessonSlug] = lessonId.split("/")
-  const lesson = findLesson(partSlug, lessonSlug)!
-  const part = partOf(lesson)
+  const lesson = findLesson(lessonId)!
   const { prev, next } = adjacentLessons(lesson)
 
-  const { completed, markCompleted, setLastVisited } = useProgress()
+  const { markCompleted, setLastVisited } = useProgress()
 
   const [code, setCode] = useState(() => loadDraft(lesson.id) ?? lesson.initialCode)
   const [entries, setEntries] = useState<ConsoleEntry[]>([])
@@ -117,13 +117,13 @@ function LessonView({ lessonId }: { lessonId: string }) {
     appendEntry({ kind: "system", text: "実行を停止しました" })
   }
 
-  const handleChange = (next: string) => {
-    setCode(next)
-    displayedCodeRef.current = next
+  const handleChange = (nextCode: string) => {
+    setCode(nextCode)
+    displayedCodeRef.current = nextCode
     if (showingSolution) return // 解答表示中の編集は下書きに保存しない
-    userCodeRef.current = next
+    userCodeRef.current = nextCode
     if (saveTimerRef.current !== null) clearTimeout(saveTimerRef.current)
-    saveTimerRef.current = setTimeout(() => saveDraft(lesson.id, next), 500)
+    saveTimerRef.current = setTimeout(() => saveDraft(lesson.id, nextCode), 500)
   }
 
   const handleReset = () => {
@@ -156,46 +156,51 @@ function LessonView({ lessonId }: { lessonId: string }) {
 
   return (
     <div className="flex h-screen flex-col">
-      <header className="flex h-12 shrink-0 items-center justify-between border-b px-4">
-        <div className="flex items-center gap-3 overflow-hidden">
-          <Link to="/" className="shrink-0 text-sm font-bold tracking-tight">
-            Effect<span className="text-muted-foreground">で学ぶFP</span>
-          </Link>
-          <span className="truncate text-sm text-muted-foreground">
-            {part.title} / {lesson.meta.title}
-            {completed[lesson.id] && " ✓"}
-          </span>
+      <header className="grid h-12 shrink-0 grid-cols-[1fr_auto_1fr] items-center border-b px-2">
+        <div className="flex items-center">
+          <Button variant="ghost" size="sm" asChild>
+            <Link to="/">
+              <Home className="size-4" />
+              <span className="hidden font-bold tracking-tight md:inline">
+                Effect<span className="font-normal text-muted-foreground">で学ぶFP</span>
+              </span>
+            </Link>
+          </Button>
         </div>
-        <nav className="flex shrink-0 items-center gap-1">
-          <Button variant="ghost" size="sm" disabled={!prev} asChild={!!prev}>
+        <div className="flex min-w-0 items-center gap-0.5">
+          <Button variant="ghost" size="icon-sm" disabled={!prev} asChild={!!prev} aria-label="前のレッスン">
             {prev ? (
-              <Link to={`/tutorial/${prev.partSlug}/${prev.lessonSlug}`}>
-                <ChevronLeft /> 前へ
+              <Link to={`/tutorial/${prev.id}`}>
+                <ChevronLeft />
               </Link>
             ) : (
               <span>
-                <ChevronLeft /> 前へ
+                <ChevronLeft />
               </span>
             )}
           </Button>
-          <Button variant="ghost" size="sm" disabled={!next} asChild={!!next}>
+          <LessonMenu current={lesson} />
+          <Button variant="ghost" size="icon-sm" disabled={!next} asChild={!!next} aria-label="次のレッスン">
             {next ? (
-              <Link to={`/tutorial/${next.partSlug}/${next.lessonSlug}`}>
-                次へ <ChevronRight />
+              <Link to={`/tutorial/${next.id}`} data-testid="next-lesson">
+                <ChevronRight />
               </Link>
             ) : (
               <span>
-                次へ <ChevronRight />
+                <ChevronRight />
               </span>
             )}
           </Button>
-        </nav>
+        </div>
+        <div className="flex items-center justify-end">
+          <ThemeToggle />
+        </div>
       </header>
 
       <ResizablePanelGroup orientation="horizontal" className="min-h-0 flex-1">
         <ResizablePanel defaultSize="45" minSize="25">
           <div className="h-full overflow-y-auto">
-            <LessonText lesson={lesson} />
+            <LessonText lesson={lesson} next={next} />
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle />
@@ -216,7 +221,7 @@ function LessonView({ lessonId }: { lessonId: string }) {
                     <RotateCcw /> リセット
                   </Button>
                   <div className="flex-1" />
-                  <span className="hidden text-xs text-muted-foreground md:inline">
+                  <span className="hidden text-xs text-muted-foreground lg:inline">
                     ⌘+Enter で実行
                   </span>
                   <Button

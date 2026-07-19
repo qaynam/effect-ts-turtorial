@@ -42,6 +42,9 @@ async function doSetup(): Promise<void> {
     // ModuleResolutionKind.Bundler (= 100)。monaco の enum には無いが
     // 内包の TypeScript 5.x は対応している
     moduleResolution: 100 as unknown as monaco.typescript.ModuleResolutionKind,
+    // ModuleDetectionKind.Force (= 3): import の無いレッスンコードも
+    // モジュール扱いにする(グローバルスコープの衝突対策)
+    moduleDetection: 3,
     strict: true,
     exactOptionalPropertyTypes: true,
     allowNonTsExtensions: true,

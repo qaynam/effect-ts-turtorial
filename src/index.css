@@ -169,3 +169,29 @@
     @apply my-4;
   }
 }
+
+/* shiki: ライト/ダーク両テーマ対応(defaultColor: false で CSS 変数出力) */
+.shiki-block .shiki,
+.shiki-block .shiki span {
+  color: var(--shiki-light);
+  background-color: var(--shiki-light-bg);
+}
+.dark .shiki-block .shiki,
+.dark .shiki-block .shiki span {
+  color: var(--shiki-dark);
+  background-color: var(--shiki-dark-bg);
+}
+
+/* レッスン内コードの差分ハイライト(+++追加+++ / ~~~削除~~~) */
+.shiki-block .diff-add {
+  @apply rounded-sm bg-emerald-500/15 outline outline-1 outline-emerald-500/30;
+}
+.dark .shiki-block .diff-add {
+  @apply bg-emerald-400/20 outline-emerald-400/40;
+}
+.shiki-block .diff-remove {
+  @apply rounded-sm bg-red-500/15 line-through outline outline-1 outline-red-500/30;
+}
+.dark .shiki-block .diff-remove {
+  @apply bg-red-400/20 outline-red-400/40;
+}

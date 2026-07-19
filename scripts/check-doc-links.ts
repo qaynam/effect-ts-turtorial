@@ -15,15 +15,19 @@ const parts = await readdir(contentDir, { withFileTypes: true })
 for (const part of parts) {
   if (!part.isDirectory()) continue
   const partDir = path.join(contentDir, part.name)
-  for (const lesson of await readdir(partDir, { withFileTypes: true })) {
-    if (!lesson.isDirectory()) continue
-    const md = await readFile(path.join(partDir, lesson.name, "lesson.md"), "utf8")
-    const match = /^---\r?\n([\s\S]*?)\r?\n---/.exec(md)
-    if (!match) continue
-    const meta = parseYaml(match[1]) as { docs?: { url: string }[] }
-    for (const doc of meta.docs ?? []) {
-      const id = `${part.name}/${lesson.name}`
-      urls.set(doc.url, [...(urls.get(doc.url) ?? []), id])
+  for (const chapter of await readdir(partDir, { withFileTypes: true })) {
+    if (!chapter.isDirectory()) continue
+    const chapterDir = path.join(partDir, chapter.name)
+    for (const lesson of await readdir(chapterDir, { withFileTypes: true })) {
+      if (!lesson.isDirectory()) continue
+      const md = await readFile(path.join(chapterDir, lesson.name, "lesson.md"), "utf8")
+      const match = /^---\r?\n([\s\S]*?)\r?\n---/.exec(md)
+      if (!match) continue
+      const meta = parseYaml(match[1]) as { docs?: { url: string }[] }
+      for (const doc of meta.docs ?? []) {
+        const id = `${part.name}/${chapter.name}/${lesson.name}`
+        urls.set(doc.url, [...(urls.get(doc.url) ?? []), id])
+      }
     }
   }
 }

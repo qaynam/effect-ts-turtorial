@@ -1,19 +1,109 @@
 {
   "parts": [
     {
-      "slug": "part-1-fp-basics",
+      "slug": "01-fp-basics",
       "title": "Part 1: FPの基礎",
-      "lessons": ["01-welcome", "10-pipe-flow"]
+      "chapters": [
+        {
+          "slug": "01-introduction",
+          "title": "はじめに",
+          "lessons": ["01-welcome", "02-pure-functions", "03-side-effects", "04-actions-calculations-data"]
+        },
+        {
+          "slug": "02-values-and-functions",
+          "title": "値と関数",
+          "lessons": ["01-immutability", "02-higher-order-functions", "03-closures"]
+        },
+        {
+          "slug": "03-composing-functions",
+          "title": "関数を組み立てる",
+          "lessons": ["01-currying", "02-partial-application", "03-pipe-flow"]
+        }
+      ]
     },
     {
-      "slug": "part-3-effect-intro",
+      "slug": "02-fp-theory",
+      "title": "Part 2: FPの理論",
+      "chapters": [
+        {
+          "slug": "01-modeling-data",
+          "title": "データの形",
+          "lessons": ["01-adt", "02-pattern-matching"]
+        },
+        {
+          "slug": "02-handling-absence",
+          "title": "失敗を値にする",
+          "lessons": ["01-option-1", "02-option-2", "03-either"]
+        },
+        {
+          "slug": "03-abstraction",
+          "title": "抽象の正体",
+          "lessons": ["01-functor", "02-functor-laws", "03-monad", "04-monad-laws", "05-applicative", "06-why-abstraction", "07-effect-option-either"]
+        }
+      ]
+    },
+    {
+      "slug": "03-effect-basics",
       "title": "Part 3: Effect入門",
-      "lessons": ["01-effect-type", "02-succeed-fail", "08-effect-gen"]
+      "chapters": [
+        {
+          "slug": "01-first-steps",
+          "title": "Effectの第一歩",
+          "lessons": ["01-effect-type", "02-succeed-fail", "03-sync-try", "04-promise", "05-running-effects"]
+        },
+        {
+          "slug": "02-building-programs",
+          "title": "プログラムを組み立てる",
+          "lessons": ["01-map-flatmap", "02-pipelines", "03-effect-gen"]
+        },
+        {
+          "slug": "03-error-handling",
+          "title": "エラーハンドリング",
+          "lessons": ["01-two-error-types", "02-tagged-errors", "03-catching", "04-match-fallback"]
+        }
+      ]
     },
     {
-      "slug": "part-4-effect-practice",
+      "slug": "04-effect-in-practice",
       "title": "Part 4: Effect実践",
-      "lessons": ["14-http-client"]
+      "chapters": [
+        {
+          "slug": "01-dependencies",
+          "title": "依存を管理する",
+          "lessons": ["01-services", "02-layers", "03-composing-layers"]
+        },
+        {
+          "slug": "02-resources-and-concurrency",
+          "title": "リソースと並行処理",
+          "lessons": ["01-scope", "02-acquire-release", "03-fibers", "04-effect-all", "05-race-timeout"]
+        },
+        {
+          "slug": "03-time-and-state",
+          "title": "時間と状態",
+          "lessons": ["01-retry", "02-repeat", "03-ref"]
+        },
+        {
+          "slug": "04-validating-data",
+          "title": "外部データを信用しない",
+          "lessons": ["01-schema", "02-schema-transform", "03-http-client"]
+        }
+      ]
+    },
+    {
+      "slug": "05-final-project",
+      "title": "Part 5: 総仕上げ",
+      "chapters": [
+        {
+          "slug": "01-weather-app",
+          "title": "天気アプリを作る",
+          "lessons": ["01-design", "02-schema", "03-http-layer", "04-resilience", "05-concurrent-fetch", "06-run-boundary"]
+        },
+        {
+          "slug": "02-graduation",
+          "title": "卒業",
+          "lessons": ["01-todo-app"]
+        }
+      ]
     }
   ]
 }

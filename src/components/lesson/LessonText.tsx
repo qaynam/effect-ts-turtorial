@@ -1,15 +1,50 @@
 import { useEffect, useState } from "react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
-import { codeToHtml } from "shiki"
-import { ExternalLink } from "lucide-react"
+import { codeToHtml, type DecorationItem } from "shiki"
+import { ArrowRight, ExternalLink } from "lucide-react"
+import { Link } from "react-router"
 import type { Lesson } from "@/content/types"
 
-function ShikiBlock({ code, lang }: { code: string; lang: string }) {
+/**
+ * コードブロック内の +++追加+++ / ~~~削除~~~ マーカーを取り除き、
+ * 該当範囲を shiki の decoration(ハイライト)に変換する。
+ * レッスンで「どこを書き換えるか」を視覚的に示すための記法。
+ */
+function parseDiffMarkers(raw: string): { code: string; decorations: DecorationItem[] } {
+  const decorations: DecorationItem[] = []
+  const re = /(\+\+\+|~~~)([\s\S]*?)\1/g
+  let code = ""
+  let last = 0
+  let m: RegExpExecArray | null
+  while ((m = re.exec(raw)) !== null) {
+    code += raw.slice(last, m.index)
+    const start = code.length
+    code += m[2]
+    if (m[2].length > 0) {
+      decorations.push({
+        start,
+        end: code.length,
+        properties: { class: m[1] === "+++" ? "diff-add" : "diff-remove" },
+      })
+    }
+    last = m.index + m[0].length
+  }
+  code += raw.slice(last)
+  return { code, decorations }
+}
+
+function ShikiBlock({ code: raw, lang }: { code: string; lang: string }) {
   const [html, setHtml] = useState<string | null>(null)
   useEffect(() => {
     let cancelled = false
-    codeToHtml(code, { lang, theme: "github-dark" })
+    const { code, decorations } = parseDiffMarkers(raw)
+    codeToHtml(code, {
+      lang,
+      themes: { light: "github-light", dark: "github-dark" },
+      defaultColor: false,
+      decorations,
+    })
       .then((h) => {
         if (!cancelled) setHtml(h)
       })
@@ -19,27 +54,28 @@ function ShikiBlock({ code, lang }: { code: string; lang: string }) {
     return () => {
       cancelled = true
     }
-  }, [code, lang])
+  }, [raw, lang])
 
   if (html === null) {
     return (
-      <pre className="overflow-x-auto rounded-lg bg-zinc-950 p-4 text-[13px] text-zinc-100">
-        <code>{code}</code>
+      <pre className="overflow-x-auto rounded-lg border bg-muted/40 p-4 text-[13px]">
+        <code>{parseDiffMarkers(raw).code}</code>
       </pre>
     )
   }
   return (
     <div
-      className="overflow-x-auto rounded-lg text-[13px] [&_pre]:!bg-zinc-950 [&_pre]:p-4"
+      className="shiki-block overflow-x-auto rounded-lg border text-[13px] [&_pre]:p-4"
       // shiki が生成した信頼できる HTML のみを描画する
       dangerouslySetInnerHTML={{ __html: html }}
     />
   )
 }
 
-export function LessonText({ lesson }: { lesson: Lesson }) {
+export function LessonText({ lesson, next }: { lesson: Lesson; next?: Lesson }) {
   return (
     <article className="prose-tutorial mx-auto max-w-2xl px-6 py-8">
+      <h1 className="mb-4 mt-2 text-2xl font-bold tracking-tight">{lesson.meta.title}</h1>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
@@ -90,6 +126,18 @@ export function LessonText({ lesson }: { lesson: Lesson }) {
             ))}
           </ul>
         </div>
+      )}
+
+      {next && (
+        <Link
+          to={`/tutorial/${next.id}`}
+          className="mt-10 flex items-center justify-between rounded-lg border bg-muted/30 px-4 py-3 font-medium transition-colors hover:bg-muted/70"
+        >
+          <span>
+            次のレッスン: <span className="text-primary">{next.meta.title}</span>
+          </span>
+          <ArrowRight className="size-4" />
+        </Link>
       )}
     </article>
   )

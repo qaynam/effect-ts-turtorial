@@ -1,6 +1,7 @@
 import { Editor, type OnMount } from "@monaco-editor/react"
 import { useRef } from "react"
 import { setupMonaco } from "@/monaco/setup"
+import { useTheme } from "@/stores/theme"
 
 // エディタ表示前に型定義の登録を開始しておく(冪等)
 void setupMonaco()
@@ -15,6 +16,7 @@ export function CodeEditor({
   /** Cmd/Ctrl+Enter で実行 */
   onRun: () => void
 }) {
+  const theme = useTheme((s) => s.theme)
   // Monaco の addCommand はマウント時のクロージャを掴むため ref 経由で呼ぶ
   const onRunRef = useRef(onRun)
   onRunRef.current = onRun
@@ -45,7 +47,7 @@ export function CodeEditor({
       value={value}
       onChange={(code) => onChange(code ?? "")}
       onMount={handleMount}
-      theme="vs-dark"
+      theme={theme === "dark" ? "vs-dark" : "light"}
       loading={<p className="text-sm text-muted-foreground">エディタを読み込み中…</p>}
       options={{
         minimap: { enabled: false },

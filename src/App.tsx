@@ -7,7 +7,10 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/tutorial/:partSlug/:lessonSlug" element={<LessonPage />} />
+        <Route
+          path="/tutorial/:partSlug/:chapterSlug/:lessonSlug"
+          element={<LessonPage />}
+        />
       </Routes>
     </BrowserRouter>
   )

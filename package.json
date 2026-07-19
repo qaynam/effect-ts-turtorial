@@ -10,8 +10,11 @@
     "predev": "tsx scripts/ensure-generated.ts",
     "check-doc-links": "tsx scripts/check-doc-links.ts",
     "lint": "oxlint",
-    "preview": "vite preview",
-    "e2e": "playwright test"
+    "preview": "pnpm run build && wrangler dev",
+    "e2e": "playwright test",
+    "deploy": "pnpm run build && wrangler deploy",
+    "verify-lessons": "tsx scripts/verify-lessons.ts",
+    "typecheck-content": "tsc -p tsconfig.content.json"
   },
   "dependencies": {
     "@effect/platform": "^0.97.0",
@@ -38,6 +41,7 @@
     "zustand": "^5.0.14"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.45.1",
     "@playwright/test": "^1.61.1",
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^24.13.2",
