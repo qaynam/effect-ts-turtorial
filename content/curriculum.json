@@ -3,6 +3,7 @@
     {
       "slug": "01-fp-basics",
       "title": "Part 1: FPの基礎",
+      "description": "純粋関数と副作用を見分け、関数を値として組み立てられるようになる",
       "chapters": [
         {
           "slug": "01-introduction",
@@ -39,6 +40,7 @@
     {
       "slug": "02-fp-theory",
       "title": "Part 2: FPの理論",
+      "description": "Option / Either を自作し、Functor や Monad が何の名前なのかを掴む",
       "chapters": [
         {
           "slug": "01-modeling-data",
@@ -76,6 +78,7 @@
     {
       "slug": "03-effect-basics",
       "title": "Part 3: Effect入門",
+      "description": "Effect<A, E, R> でエラーを型に乗せ、Effect.gen で手続き的に書く",
       "chapters": [
         {
           "slug": "01-first-steps",
@@ -112,6 +115,7 @@
     {
       "slug": "04-effect-in-practice",
       "title": "Part 4: Effect実践",
+      "description": "依存注入・リソース・並行処理・リトライ・検証と、実務の道具を揃える",
       "chapters": [
         {
           "slug": "01-dependencies",
@@ -158,6 +162,7 @@
     {
       "slug": "05-final-project",
       "title": "Part 5: 総仕上げ",
+      "description": "学んだ部品で天気アプリを組み立て、最後は TODO アプリを自力で作る",
       "chapters": [
         {
           "slug": "01-weather-app",

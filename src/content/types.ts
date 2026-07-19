@@ -41,6 +41,7 @@ export interface Chapter {
 export interface Part {
   slug: string
   title: string
+  description: string
   chapters: Chapter[]
 }
 

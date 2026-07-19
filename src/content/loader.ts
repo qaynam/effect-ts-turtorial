@@ -39,6 +39,7 @@ interface CurriculumSpec {
   parts: {
     slug: string
     title: string
+    description: string
     chapters: { slug: string; title: string; lessons: string[] }[]
   }[]
 }
@@ -50,6 +51,7 @@ function buildCurriculum(): Curriculum {
   const parts: Part[] = spec.parts.map((partSpec) => ({
     slug: partSpec.slug,
     title: partSpec.title,
+    description: partSpec.description,
     chapters: partSpec.chapters.map((chapterSpec) => ({
       slug: chapterSpec.slug,
       title: chapterSpec.title,
