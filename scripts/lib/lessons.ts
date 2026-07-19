@@ -1,10 +1,4 @@
-/**
- * ビルド用スクリプトから content/ のカリキュラムを読むための共通ローダー。
- *
- * アプリ側(src/content/loader.ts)は Vite の import.meta.glob を使うため
- * Node から再利用できない。frontmatter だけで足りるビルド用途のために、
- * ここでは fs で同じ構造を読む。
- */
+/** content/ のカリキュラムを Node から読む(ビルドスクリプト用)。 */
 import { readFile } from "node:fs/promises"
 import path from "node:path"
 import { parse as parseYaml } from "yaml"
@@ -68,9 +62,8 @@ export function ogFileName(lessonId: string): string {
 }
 
 export {
+  ASSETS_DIR,
   projectRoot,
   siteDescription,
   siteName,
-  siteUrl,
-  siteUrlIsConfigured,
 } from "./site"

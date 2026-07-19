@@ -1,11 +1,4 @@
-/**
- * 実行のオーケストレーション: バンドル → 使い捨て Worker で実行 →
- * イベント転送 → タイムアウト管理。
- *
- * done 後も timeoutMs まで Worker を生かしておく(fork した Fiber が
- * 後からログを出すレッスンがあるため)。timeout イベントを出すのは
- * done 前に時間切れになった場合のみ。
- */
+/** バンドル → 使い捨て Worker で実行 → イベント転送 → タイムアウト管理。 */
 import { bundleUserCode } from "./bundler"
 import type { RunnerEvent, RunMessage } from "./protocol"
 

@@ -1,10 +1,4 @@
-/**
- * Monaco Editor のセットアップ。
- *
- * - CDN ではなくローカルの monaco-editor を使う(オフライン・バージョン固定)
- * - effect / @effect/platform の d.ts(public/generated/types-effect.json)を
- *   仮想 file:///node_modules/ として登録し、型補完・型エラーを有効にする
- */
+/** Monaco Editor のセットアップと effect の型定義登録。 */
 import { loader } from "@monaco-editor/react"
 import * as monaco from "monaco-editor"
 import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker"

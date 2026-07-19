@@ -1,17 +1,11 @@
-/**
- * OG 画像(1200x630 PNG)をビルド時に生成して dist/og/ に出力する。
- *
- * レッスンは content/ で静的に確定しているので、実行時に Worker で
- * 生成する必要がない。ビルド時に焼いて静的配信すれば、Worker の
- * バンドル上限もコールドスタートもキャッシュ設計も不要になる。
- */
+/** OG 画像(1200x630 PNG)を生成する。 */
 import { mkdir, readFile, writeFile } from "node:fs/promises"
 import path from "node:path"
 import { Resvg } from "@resvg/resvg-js"
 import satori from "satori"
-import { loadLessons, ogFileName, projectRoot, siteName } from "./lib/lessons"
+import { ASSETS_DIR, loadLessons, ogFileName, projectRoot, siteName } from "./lib/lessons"
 
-const OUT_DIR = path.join(projectRoot, "dist/og")
+const OUT_DIR = path.join(projectRoot, ASSETS_DIR, "og")
 const WIDTH = 1200
 const HEIGHT = 630
 

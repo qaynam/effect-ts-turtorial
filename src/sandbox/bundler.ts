@@ -1,11 +1,4 @@
-/**
- * ユーザーの TypeScript コードをブラウザ内でバンドルする。
- *
- * - effect / @effect/platform は external とし、import 指定子を
- *   public/vendor/ のプリバンドル済み ESM の絶対 URL に書き換える
- *   (実行は Blob URL のモジュールなので相対パスでは解決できない)
- * - それ以外の import はエラーにして日本語メッセージで案内する
- */
+/** ユーザーの TypeScript コードをブラウザ内でバンドルする。 */
 import * as esbuild from "esbuild-wasm"
 import wasmURL from "esbuild-wasm/esbuild.wasm?url"
 

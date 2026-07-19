@@ -1,35 +1,19 @@
-/**
- * レッスンごとの HTML を dist/ に書き出す。
- *
- * SPA なのでクライアント側で meta を差し替えても、JS を実行しない
- * クローラ(Slack / Discord / X など)には届かない。レッスンは
- * ビルド時に確定しているので、各 URL に対して meta 入りの HTML を
- * 焼いておく。中身は同じ SPA バンドルなので、表示後はいつもどおり
- * クライアントルーティングに引き継がれる。
- *
- * Workers Static Assets は /tutorial/a/b/c へのリクエストに
- * /tutorial/a/b/c/index.html を返すため、この配置で素直に効く。
- */
+/** レッスンごとに meta 入りの HTML を書き出す。 */
 import { mkdir, readFile, writeFile } from "node:fs/promises"
 import path from "node:path"
 import {
+  ASSETS_DIR,
   loadLessons,
   ogFileName,
   projectRoot,
   siteDescription,
   siteName,
-  siteUrl,
-  siteUrlIsConfigured,
 } from "./lib/lessons"
 
-if (!siteUrlIsConfigured) {
-  console.warn(
-    "警告: SITE_URL が未設定のため OG の URL がローカル向けになります。\n" +
-      "       公開用にビルドするときは .env に SITE_URL を設定してください(.env.example 参照)。",
-  )
-}
+/** src/worker.ts が配信時に実際のオリジンへ置き換える */
+const siteUrl = "%SITE_URL%"
 
-const distDir = path.join(projectRoot, "dist")
+const distDir = path.join(projectRoot, ASSETS_DIR)
 
 function escapeHtml(s: string): string {
   return s
@@ -46,10 +30,14 @@ interface PageMeta {
   image: string
 }
 
+// 生成済みの HTML を再度テンプレートにしても二重挿入にならないようにする
+const MARKER_START = "<!-- og:start -->"
+const MARKER_END = "<!-- og:end -->"
+
 function metaTags({ title, description, url, image }: PageMeta): string {
   const t = escapeHtml(title)
   const d = escapeHtml(description)
-  return [
+  const tags = [
     `<title>${t}</title>`,
     `<meta name="description" content="${d}" />`,
     `<link rel="canonical" href="${url}" />`,
@@ -69,12 +57,14 @@ function metaTags({ title, description, url, image }: PageMeta): string {
   ]
     .map((tag) => `    ${tag}`)
     .join("\n")
+  return `    ${MARKER_START}\n${tags}\n    ${MARKER_END}`
 }
 
-/** index.html の <title> とプレースホルダをページ固有の meta に差し替える */
 function renderHtml(template: string, meta: PageMeta): string {
-  const withoutTitle = template.replace(/\s*<title>[\s\S]*?<\/title>/, "")
-  return withoutTitle.replace("</head>", `${metaTags(meta)}\n  </head>`)
+  const cleaned = template
+    .replace(new RegExp(`\\s*${MARKER_START}[\\s\\S]*?${MARKER_END}`), "")
+    .replace(/\s*<title>[\s\S]*?<\/title>/, "")
+  return cleaned.replace("</head>", `${metaTags(meta)}\n  </head>`)
 }
 
 const template = await readFile(path.join(distDir, "index.html"), "utf8")
@@ -105,4 +95,4 @@ for (const lesson of lessons) {
   )
 }
 
-console.log(`dist/: index.html + ${lessons.length} 件のレッスン HTML を生成 (${siteUrl})`)
+console.log(`dist/: index.html + ${lessons.length} 件のレッスン HTML を生成`)

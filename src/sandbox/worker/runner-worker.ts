@@ -1,10 +1,4 @@
-/**
- * ユーザーコード実行用 Worker。毎実行ごとに使い捨てられる前提
- * (グローバル汚染・前回実行の残存 Fiber を持ち越さないため)。
- *
- * console.* を monkey-patch してログを main スレッドへ転送し、
- * バンドル済みコードを Blob URL 経由で動的 import する。
- */
+/** ユーザーコードを実行する使い捨て Worker。console 出力を main へ転送する。 */
 import type { LogLevel, RunMessage, WorkerEvent } from "../protocol"
 
 const MAX_LOG_LINES = 1000

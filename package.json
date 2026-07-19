@@ -17,8 +17,7 @@
     "verify-lessons": "tsx scripts/verify-lessons.ts",
     "typecheck-content": "tsc -p tsconfig.content.json",
     "build:og": "tsx scripts/build-og.ts",
-    "prerender": "tsx scripts/prerender.ts",
-    "predeploy": "tsx scripts/check-site-url.ts"
+    "prerender": "tsx scripts/prerender.ts"
   },
   "dependencies": {
     "@effect/platform": "^0.97.0",
@@ -30,6 +29,7 @@
     "esbuild-wasm": "^0.28.1",
     "lucide-react": "^1.25.0",
     "monaco-editor": "^0.55.1",
+    "monaco-vim": "^0.4.4",
     "radix-ui": "^1.6.2",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
@@ -46,6 +46,7 @@
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.45.1",
+    "@cloudflare/workers-types": "^5.20260718.1",
     "@fontsource/noto-sans-jp": "^5.2.9",
     "@playwright/test": "^1.61.1",
     "@resvg/resvg-js": "^2.6.2",

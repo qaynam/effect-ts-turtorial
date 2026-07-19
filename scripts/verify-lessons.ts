@@ -1,14 +1,4 @@
-/**
- * 全レッスンの整合性検証(CI / 執筆時のセルフチェック用)。
- *
- * 1. curriculum.json に載っている全レッスンのファイル存在チェック
- * 2. solution.ts(あれば initial.ts も)を tsx で実際に実行し、
- *    frontmatter の expectedOutput と stdout が一致するか検証
- *
- * 使い方:
- *   npx tsx scripts/verify-lessons.ts             # 全レッスン
- *   npx tsx scripts/verify-lessons.ts 02-fp-theory # パスに部分一致するものだけ
- */
+/** 全レッスンのファイル存在と、solution.ts の出力が expectedOutput と一致するかを検証する。 */
 import { execFile } from "node:child_process"
 import { existsSync } from "node:fs"
 import { readFile } from "node:fs/promises"

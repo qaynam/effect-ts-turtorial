@@ -1,14 +1,4 @@
-/**
- * content/ ディレクトリからカリキュラム全体を読み込む。
- *
- * 構造は Part → チャプター → レッスンの 3 階層。
- * レッスンの追加は content/<part>/<chapter>/<lesson>/{lesson.md, solution.ts}
- * (+ 必要なら initial.ts)を置いて content/curriculum.json に 1 行足すだけ。
- * initial.ts を省略したレッスンは直前のレッスンの solution.ts から始まる
- * (アプリを少しずつ育てていく Part 5 のような連続レッスン用)。
- *
- * 構成の不整合(ファイル不足など)は起動時に例外で検出する。
- */
+/** content/ からカリキュラム全体を読み込む。 */
 import { parse as parseYaml } from "yaml"
 import curriculumJson from "../../content/curriculum.json"
 import type { Curriculum, Lesson, LessonMeta, Part } from "./types"

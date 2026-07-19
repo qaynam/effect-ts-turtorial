@@ -1,7 +1,4 @@
-/**
- * 全レッスンの frontmatter に書かれた Effect docs リンクが実在するかを
- * HEAD リクエストで検証する(CI 用)。
- */
+/** レッスンの frontmatter に書かれた Effect docs リンクの実在を検証する。 */
 import { readdir, readFile } from "node:fs/promises"
 import path from "node:path"
 import { parse as parseYaml } from "yaml"
