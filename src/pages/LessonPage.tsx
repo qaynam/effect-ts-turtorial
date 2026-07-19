@@ -1,6 +1,15 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { type ReactNode, useCallback, useEffect, useRef, useState } from "react"
 import { Link, Navigate, useParams } from "react-router"
-import { ChevronLeft, ChevronRight, Eye, Home, Play, RotateCcw, Square, Undo2 } from "lucide-react"
+import {
+  ChevronLeft,
+  ChevronRight,
+  Eye,
+  Home,
+  Play,
+  RotateCcw,
+  Square,
+  Undo2,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   ResizableHandle,
@@ -28,9 +37,26 @@ export function LessonPage() {
   return <LessonView key={lesson.id} lessonId={lesson.id} />
 }
 
+function useMediaQuery(query: string) {
+  const [matches, setMatches] = useState(() =>
+    typeof window === "undefined" ? false : window.matchMedia(query).matches,
+  )
+
+  useEffect(() => {
+    const media = window.matchMedia(query)
+    const handleChange = () => setMatches(media.matches)
+    handleChange()
+    media.addEventListener("change", handleChange)
+    return () => media.removeEventListener("change", handleChange)
+  }, [query])
+
+  return matches
+}
+
 function LessonView({ lessonId }: { lessonId: string }) {
   const lesson = findLesson(lessonId)!
   const { prev, next } = adjacentLessons(lesson)
+  const isMobile = useMediaQuery("(max-width: 799px)")
 
   const { markCompleted, setLastVisited } = useProgress()
 
@@ -39,6 +65,7 @@ function LessonView({ lessonId }: { lessonId: string }) {
   const [status, setStatus] = useState<RunStatus>("idle")
   const [cleared, setCleared] = useState(false)
   const [showingSolution, setShowingSolution] = useState(false)
+  const [mobilePane, setMobilePane] = useState<"text" | "editor">("text")
 
   const runHandleRef = useRef<RunHandle | null>(null)
   const entriesRef = useRef<ConsoleEntry[]>([])
@@ -154,8 +181,77 @@ function LessonView({ lessonId }: { lessonId: string }) {
 
   const running = status === "running" || status === "bundling"
 
+  const editorToolbar = (
+    <div className="flex h-11 shrink-0 items-center gap-1.5 overflow-x-auto border-b px-3">
+      <Button size="sm" onClick={handleRun} disabled={running} data-testid="run-button">
+        <Play /> Run
+      </Button>
+      {running && (
+        <Button size="sm" variant="outline" onClick={handleStop}>
+          <Square /> 停止
+        </Button>
+      )}
+      <Button size="sm" variant="ghost" onClick={handleReset}>
+        <RotateCcw /> リセット
+      </Button>
+      <div className="flex-1" />
+      <span className="hidden text-xs text-muted-foreground lg:inline">
+        ⌘+Enter で実行
+      </span>
+      <Button
+        size="sm"
+        variant={showingSolution ? "secondary" : "outline"}
+        onClick={toggleSolution}
+        data-testid="solve-button"
+      >
+        {showingSolution ? (
+          <>
+            <Undo2 /> 自分のコードに戻す
+          </>
+        ) : (
+          <>
+            <Eye /> 解答を見る
+          </>
+        )}
+      </Button>
+    </div>
+  )
+
+  const editorPane = (
+    <div className="flex h-full min-h-0 flex-col">
+      {editorToolbar}
+      <div className="min-h-0 flex-1">
+        <CodeEditor value={code} onChange={handleChange} onRun={handleRun} />
+      </div>
+    </div>
+  )
+
+  const outputPane = (
+    <div className="h-full min-h-0">
+      <ConsolePanel entries={entries} status={status} cleared={cleared} />
+    </div>
+  )
+
+  const editorWorkspace = (
+    <ResizablePanelGroup orientation="vertical">
+      <ResizablePanel defaultSize="65" minSize="20">
+        {editorPane}
+      </ResizablePanel>
+      <ResizableHandle withHandle />
+      <ResizablePanel defaultSize="35" minSize="15">
+        {outputPane}
+      </ResizablePanel>
+    </ResizablePanelGroup>
+  )
+
+  const lessonTextPane = (
+    <div className="h-full overflow-y-auto">
+      <LessonText lesson={lesson} next={next} />
+    </div>
+  )
+
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex h-[100dvh] flex-col overflow-hidden">
       <header className="grid h-12 shrink-0 grid-cols-[1fr_auto_1fr] items-center border-b px-2">
         <div className="flex items-center">
           <Button variant="ghost" size="sm" asChild>
@@ -197,62 +293,88 @@ function LessonView({ lessonId }: { lessonId: string }) {
         </div>
       </header>
 
-      <ResizablePanelGroup orientation="horizontal" className="min-h-0 flex-1">
-        <ResizablePanel defaultSize="45" minSize="25">
-          <div className="h-full overflow-y-auto">
-            <LessonText lesson={lesson} next={next} />
-          </div>
-        </ResizablePanel>
-        <ResizableHandle withHandle />
-        <ResizablePanel defaultSize="55" minSize="30">
-          <ResizablePanelGroup orientation="vertical">
-            <ResizablePanel defaultSize="65" minSize="20">
-              <div className="flex h-full flex-col">
-                <div className="flex h-11 shrink-0 items-center gap-1.5 border-b px-3">
-                  <Button size="sm" onClick={handleRun} disabled={running} data-testid="run-button">
-                    <Play /> Run
-                  </Button>
-                  {running && (
-                    <Button size="sm" variant="outline" onClick={handleStop}>
-                      <Square /> 停止
-                    </Button>
-                  )}
-                  <Button size="sm" variant="ghost" onClick={handleReset}>
-                    <RotateCcw /> リセット
-                  </Button>
-                  <div className="flex-1" />
-                  <span className="hidden text-xs text-muted-foreground lg:inline">
-                    ⌘+Enter で実行
-                  </span>
-                  <Button
-                    size="sm"
-                    variant={showingSolution ? "secondary" : "outline"}
-                    onClick={toggleSolution}
-                    data-testid="solve-button"
-                  >
-                    {showingSolution ? (
-                      <>
-                        <Undo2 /> 自分のコードに戻す
-                      </>
-                    ) : (
-                      <>
-                        <Eye /> 解答を見る
-                      </>
-                    )}
-                  </Button>
-                </div>
-                <div className="min-h-0 flex-1">
-                  <CodeEditor value={code} onChange={handleChange} onRun={handleRun} />
-                </div>
-              </div>
-            </ResizablePanel>
-            <ResizableHandle withHandle />
-            <ResizablePanel defaultSize="35" minSize="15">
-              <ConsolePanel entries={entries} status={status} cleared={cleared} />
-            </ResizablePanel>
-          </ResizablePanelGroup>
-        </ResizablePanel>
-      </ResizablePanelGroup>
+      {isMobile ? (
+        <MobileLessonLayout
+          pane={mobilePane}
+          onPaneChange={setMobilePane}
+          text={lessonTextPane}
+          editor={editorWorkspace}
+        />
+      ) : (
+        <ResizablePanelGroup orientation="horizontal" className="min-h-0 flex-1">
+          <ResizablePanel defaultSize="45" minSize="25">
+            {lessonTextPane}
+          </ResizablePanel>
+          <ResizableHandle withHandle />
+          <ResizablePanel defaultSize="55" minSize="30">
+            {editorWorkspace}
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      )}
     </div>
+  )
+}
+
+function MobileLessonLayout({
+  pane,
+  onPaneChange,
+  text,
+  editor,
+}: {
+  pane: "text" | "editor"
+  onPaneChange: (pane: "text" | "editor") => void
+  text: ReactNode
+  editor: ReactNode
+}) {
+  const showingEditor = pane === "editor"
+
+  return (
+    <>
+      <main className="min-h-0 flex-1 overflow-hidden">
+        {pane === "text" ? text : editor}
+      </main>
+      <div className="grid h-11 shrink-0 grid-cols-[1fr_4rem_1fr] items-center gap-2 border-t bg-background px-4 text-xs font-medium">
+        <button
+          type="button"
+          className={
+            pane === "text"
+              ? "justify-self-end text-foreground"
+              : "justify-self-end text-muted-foreground"
+          }
+          aria-current={pane === "text" ? "page" : undefined}
+          onClick={() => onPaneChange("text")}
+        >
+          解説
+        </button>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={showingEditor}
+          aria-label="解説とエディタを切り替え"
+          className="relative mx-auto h-6 w-11 rounded-full border bg-muted transition-colors aria-checked:bg-primary"
+          onClick={() => onPaneChange(pane === "text" ? "editor" : "text")}
+        >
+          <span
+            className={
+              showingEditor
+                ? "absolute left-0.5 top-0.5 size-5 translate-x-5 rounded-full bg-background shadow-sm transition-transform"
+                : "absolute left-0.5 top-0.5 size-5 rounded-full bg-background shadow-sm transition-transform"
+            }
+          />
+        </button>
+        <button
+          type="button"
+          className={
+            showingEditor
+              ? "justify-self-start text-foreground"
+              : "justify-self-start text-muted-foreground"
+          }
+          aria-current={showingEditor ? "page" : undefined}
+          onClick={() => onPaneChange("editor")}
+        >
+          エディタ
+        </button>
+      </div>
+    </>
   )
 }
